@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.seeker.moneyexchanger.MainActivity">
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:id="@+id/tvShowResult"
+        android:hint="@string/tvResultHint"
+        android:layout_below="@+id/btnConvert"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_showValues"
+        android:onClick="onShowClick"
+        android:id="@+id/btnShowValute"
+        android:layout_marginTop="52dp"
+        android:layout_below="@+id/btnConvert"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="7"
+        android:textSize="22sp"
+        android:id="@+id/etEnterValue"
+        android:hint="@string/etEnterValue"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textIsSelectable="false"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btnConvert"
+        android:id="@+id/btnConvert"
+        android:onClick="onConvertClick"
+        android:layout_below="@+id/etEnterValue"
+        android:layout_centerHorizontal="true"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/leftSpinner"
+        android:layout_above="@+id/btnConvert"
+        android:layout_alignTop="@+id/etEnterValue"
+        android:layout_toStartOf="@+id/btnShowValute"
+        />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rightSpinner"
+        android:scrollbarSize="22dp"
+        android:layout_alignTop="@+id/etEnterValue"
+        android:layout_toEndOf="@+id/btnShowValute"
+        android:layout_above="@+id/btnConvert"/>
+</RelativeLayout>

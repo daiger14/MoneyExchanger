@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">MoneyExchanger</string>
+    <string name="btn_showValues">Посмотреть курс валют</string>
+    <string name="tvResultHint">Результат</string>
+    <string name="etEnterValue">Введите данные...</string>
+    <string name="btnConvert">Конвертировать</string>
+    <string name="exchange_currentDate">Курс валют на </string>
+    <string-array name="valutes">
+        <item>MDL</item>
+        <item>EUR</item>
+        <item>USD</item>
+        <item>RUB</item>
+        <item>RON</item>
+        <item>UAH</item>
+        <item>AED</item>
+        <item>ALL</item>
+        <item>AMD</item>
+        <item>AUD</item>
+        <item>AZN</item>
+        <item>BGN</item>
+        <item>BYN</item>
+        <item>CAD</item>
+        <item>CHF</item>
+        <item>CNY</item>
+        <item>CZK</item>
+        <item>DKK</item>
+        <item>GBP</item>
+        <item>GEL</item>
+        <item>HKD</item>
+        <item>HRK</item>
+        <item>HUF</item>
+        <item>ILS</item>
+        <item>INR</item>
+        <item>ISK</item>
+        <item>JPY</item>
+        <item>KGS</item>
+        <item>KRW</item>
+        <item>KWD</item>
+        <item>KZT</item>
+        <item>MKD</item>
+        <item>MYR</item>
+        <item>NOK</item>
+        <item>NZD</item>
+        <item>PLN</item>
+        <item>RSD</item>
+        <item>SEK</item>
+        <item>TJS</item>
+        <item>TMT</item>
+        <item>TRY</item>
+        <item>UZS</item>
+        <item>XDR</item>
+    </string-array>
+</resources>
