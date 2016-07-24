@@ -1,5 +1,6 @@
 package com.example.seeker.moneyexchanger;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,9 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -49,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
     TextView tvShowResult;
     EditText etEnterValue;
     Button btnConvert, btnShowValute;
-    List<Currency> currencys;
+    List<Currency> currencies;
     Spinner leftSpinner, rightSpinner;
+    GridView gvShowCurrencies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         etEnterValue = (EditText) findViewById(R.id.etEnterValue);
         btnConvert = (Button) findViewById(R.id.btnConvert);
         btnShowValute = (Button) findViewById(R.id.btnShowValute);
+        gvShowCurrencies = (GridView) findViewById(R.id.gvShowCurrencies);
+
 
         leftSpinner.setAdapter(adapter);
         leftSpinner.setSelection(1);
@@ -77,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         leftSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this,getResources().getStringArray(R.array.valutes)[position] , Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this,getResources().getStringArray(R.array.valutes)[position] , Toast.LENGTH_SHORT).show();
                 fromValuteName = getResources().getStringArray(R.array.valutes)[position];
             }
 
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private class GetXMLTask extends AsyncTask<String, Void, String>{
+        private Context context;
 
         @Override
         protected String doInBackground(String... urls) {
@@ -134,10 +139,9 @@ public class MainActivity extends AppCompatActivity {
 
             NodeList nodeList = doc.getElementsByTagName("Valute");
 
-            currencys = new ArrayList<>();
+            currencies = new ArrayList<>();
             Currency currency;
 
-            tvShowResult.setText("Курс валют на " + currentDate + ":\n");
             for (int i = 0; i < nodeList.getLength(); i++){
                 currency = new Currency();
                 Element e = (Element) nodeList.item(i);
@@ -151,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
 
                 currency.setName(parser.getValue(e, NODE_NAME));
                 currency.setCurrencyValue(Double.parseDouble(parser.getValue(e, NODE_VALUE)));
-                currencys.add(currency);
+                currencies.add(currency);
 
             }
-
+            gvShowCurrencies.setAdapter(new CurrencyAdapter(context, currencies));
         }
 
 
@@ -183,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             NodeList nodeList = doc.getElementsByTagName("Valute");
             double moneyCount;
 
-            currencys = new ArrayList<>();
+            currencies = new ArrayList<>();
             Currency currency = null;
 
             if (etEnterValue.getText().length() > 0){
@@ -197,10 +201,10 @@ public class MainActivity extends AppCompatActivity {
                 currency.setName(parser.getValue(e, NODE_NAME));
                 currency.setValuteName(parser.getValue(e, NODE_VALUE_NAME));
                 currency.setCurrencyValue(Double.parseDouble(parser.getValue(e, NODE_VALUE)));
-                currencys.add(currency);
+                currencies.add(currency);
             }
-            double fromValute = currency.findValuteValue(currencys, fromValuteName);
-            double toValute = currency.findValuteValue(currencys, toValuteName);
+            double fromValute = currency.findValuteValue(currencies, fromValuteName);
+            double toValute = currency.findValuteValue(currencies, toValuteName);
 
             double convertResult = convertMoney(moneyCount, fromValute, toValute);
             tvShowResult.setText(String.format(Locale.getDefault(), "%.2f", convertResult));

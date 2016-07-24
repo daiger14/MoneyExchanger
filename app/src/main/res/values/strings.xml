@@ -2,7 +2,7 @@
     <string name="app_name">MoneyExchanger</string>
     <string name="btn_showValues">Посмотреть курс валют</string>
     <string name="tvResultHint">Результат</string>
-    <string name="etEnterValue">Введите данные...</string>
+    <string name="etEnterValue"></string>
     <string name="btnConvert">Конвертировать</string>
     <string name="exchange_currentDate">Курс валют на </string>
     <string-array name="valutes">
