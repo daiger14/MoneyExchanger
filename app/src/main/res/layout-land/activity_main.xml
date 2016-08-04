@@ -20,12 +20,11 @@
         android:layout_height="wrap_content"
         android:textSize="35sp"
         android:id="@+id/tvShowResult"
-        android:layout_below="@+id/btnConvert"
-        android:layout_centerHorizontal="true"
         android:textColor="#000000"
         android:textAlignment="center"
         android:textColorHint="#f4aaaa"
-        android:layout_marginTop="10dp"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/btnShowValute" />
 
     <Button
         android:layout_width="wrap_content"
@@ -33,9 +32,9 @@
         android:text="@string/btn_showValues"
         android:onClick="onShowClick"
         android:id="@+id/btnShowValute"
-        android:layout_below="@+id/tvShowResult"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+        android:layout_gravity="right|left"
+        android:layout_below="@+id/rightSpinner"
+        android:layout_toEndOf="@+id/rightSpinner" />
 
     <Button
         android:layout_width="wrap_content"
@@ -44,7 +43,7 @@
         android:id="@+id/btnConvert"
         android:onClick="onConvertClick"
         android:layout_below="@+id/etEnterValue"
-        android:layout_centerHorizontal="true"/>
+        android:layout_toEndOf="@+id/leftSpinner" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -56,7 +55,8 @@
         android:hint="@string/etEnterValue"
         android:textIsSelectable="false"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignEnd="@+id/btnConvert"
+        android:layout_toEndOf="@+id/leftSpinner" />
 
     <Spinner
         android:layout_width="100dp"
@@ -65,7 +65,7 @@
         android:spinnerMode="dropdown"
         android:textAlignment="center"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/etEnterValue"
+        android:layout_alignParentStart="true"
         android:layout_above="@+id/btnConvert" />
 
     <Spinner
@@ -73,18 +73,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/rightSpinner"
         android:spinnerMode="dropdown"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/btnConvert"
         android:layout_above="@+id/btnConvert" />
 
     <GridView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/gvShowCurrencies"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/btnShowValute"
         android:numColumns="auto_fit"
         android:gravity="center"
         android:columnWidth="60dp"
         android:horizontalSpacing="1dp"
-        android:verticalSpacing="2dp" />
+        android:verticalSpacing="2dp"
+        android:layout_below="@+id/btnShowValute"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

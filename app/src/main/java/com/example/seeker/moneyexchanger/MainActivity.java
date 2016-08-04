@@ -1,11 +1,11 @@
 package com.example.seeker.moneyexchanger;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
     private String URL = "http://www.bnm.md/ru/official_exchange_rates?get_xml=1&date=" + currentDate;
     private String fromValuteName;
     private String toValuteName;
+    private double convertResult;
 
     static final String NODE_NAME = "Name";
     static final String NODE_VALUE = "Value";
     static final String NODE_VALUE_NAME = "CharCode";
+    private static final String KEY_CONVERT = "CONVERT";
 
     TextView tvShowResult;
     EditText etEnterValue;
@@ -54,24 +57,20 @@ public class MainActivity extends AppCompatActivity {
     Spinner leftSpinner, rightSpinner;
     GridView gvShowCurrencies;
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                                             getResources().getStringArray(R.array.valutes));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
-        leftSpinner = (Spinner) findViewById(R.id.leftSpinner);
-        rightSpinner = (Spinner) findViewById(R.id.rightSpinner);
-        tvShowResult = (TextView) findViewById(R.id.tvShowResult);
-        etEnterValue = (EditText) findViewById(R.id.etEnterValue);
-        btnConvert = (Button) findViewById(R.id.btnConvert);
-        btnShowValute = (Button) findViewById(R.id.btnShowValute);
-        gvShowCurrencies = (GridView) findViewById(R.id.gvShowCurrencies);
-
+        findViewsById();
 
         leftSpinner.setAdapter(adapter);
         leftSpinner.setSelection(1);
@@ -103,7 +102,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if (savedInstanceState != null){
+            convertResult = savedInstanceState.getDouble(KEY_CONVERT, 0);
+            tvShowResult.setText(String.format(Locale.getDefault(), "%.2f", convertResult));
+        }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putDouble(KEY_CONVERT, convertResult);
     }
 
     public void onConvertClick(View v){
@@ -117,14 +127,13 @@ public class MainActivity extends AppCompatActivity {
         getXMLTask.execute(URL);
     }
 
-
-
     private class GetXMLTask extends AsyncTask<String, Void, String>{
-        private Context context;
+        //private Context context;
 
         @Override
         protected String doInBackground(String... urls) {
             String xml = null;
+            new BNMFileXML(URL, "Example");
             for (String url : urls) {
                 xml = getXmlFromUrl(url);
             }
@@ -146,19 +155,21 @@ public class MainActivity extends AppCompatActivity {
                 currency = new Currency();
                 Element e = (Element) nodeList.item(i);
 
-//                tvShowResult.append(parser.getValue(e, NODE_NAME) + ":\n");
-//                tvShowResult.append(parser.getValue(e, NODE_VALUE) + " лей\n");
-                //double convertResult = convertMoney(currentValue, Double.parseDouble(parser.getValue(e , NODE_VALUE)));
-
-
-                //Log.d(LOG_TAG, currentValue + " лей = " + parser.getValue(e, NODE_VALUE_NAME) + convertResult + " лей ");
-
                 currency.setName(parser.getValue(e, NODE_NAME));
+                currency.setValuteName(parser.getValue(e, NODE_VALUE_NAME));
                 currency.setCurrencyValue(Double.parseDouble(parser.getValue(e, NODE_VALUE)));
                 currencies.add(currency);
 
             }
-            gvShowCurrencies.setAdapter(new CurrencyAdapter(context, currencies));
+            gvShowCurrencies.setAdapter(new CurrencyAdapter(getApplicationContext(), currencies));
+            gvShowCurrencies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Toast.makeText(getBaseContext(), currencies.get(i).getName(), Toast.LENGTH_SHORT).show();
+                    leftSpinner.setSelection(i+1);
+                }
+            });
+
         }
 
 
@@ -166,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class ConvertXMLValueTask extends AsyncTask<String, Void, String>{
-
 
         @Override
         protected String doInBackground(String... urls) {
@@ -176,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return xml;
         }
-
 
         @Override
         protected void onPostExecute(String xml) {
@@ -203,10 +212,11 @@ public class MainActivity extends AppCompatActivity {
                 currency.setCurrencyValue(Double.parseDouble(parser.getValue(e, NODE_VALUE)));
                 currencies.add(currency);
             }
+
             double fromValute = currency.findValuteValue(currencies, fromValuteName);
             double toValute = currency.findValuteValue(currencies, toValuteName);
 
-            double convertResult = convertMoney(moneyCount, fromValute, toValute);
+            convertResult = convertMoney(moneyCount, fromValute, toValute);
             tvShowResult.setText(String.format(Locale.getDefault(), "%.2f", convertResult));
 
         }
@@ -252,6 +262,16 @@ public class MainActivity extends AppCompatActivity {
             return moneyCount * (fromValute / toValute);
         }
         else return 0;
+    }
+
+    private void findViewsById(){
+        leftSpinner = (Spinner) findViewById(R.id.leftSpinner);
+        rightSpinner = (Spinner) findViewById(R.id.rightSpinner);
+        tvShowResult = (TextView) findViewById(R.id.tvShowResult);
+        etEnterValue = (EditText) findViewById(R.id.etEnterValue);
+        btnConvert = (Button) findViewById(R.id.btnConvert);
+        btnShowValute = (Button) findViewById(R.id.btnShowValute);
+        gvShowCurrencies = (GridView) findViewById(R.id.gvShowCurrencies);
     }
 
 }

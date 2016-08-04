@@ -1,6 +1,7 @@
 package com.example.seeker.moneyexchanger;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -38,18 +39,28 @@ public class CurrencyAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        TextView tvName, tvValue;
-        if (viewGroup == null){
-            tvName = new TextView(context);
-            tvValue = new TextView(context);
-        } else {
-            tvName = (TextView) view;
-            tvValue = (TextView) view;
-        }
+    public View getView(int position, View convertView, ViewGroup viewGroup) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        tvName.setText(currencies.get(position).getName());
-        tvValue.setText(String.format(Locale.getDefault(), "%.2f", currencies.get(position).getCurrencyValue()));
-        return null;
+        Holder holder;
+        if (convertView == null){
+            convertView = inflater.inflate(R.layout.currency_grid, null);
+            holder = new Holder();
+            holder.tvGridName = (TextView) convertView.findViewById(R.id.tvGridName);
+            holder.tvGridValue = (TextView) convertView.findViewById(R.id.tvGridValue);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder)convertView.getTag();
+        }
+        holder.tvGridName.setText(currencies.get(position).getValuteName());
+        holder.tvGridValue.setText(String.format(Locale.getDefault(), "%s", currencies.get(position).getCurrencyValue()));
+        return convertView;
+    }
+    
+
+    public static class Holder{
+        public TextView tvGridName, tvGridValue;
     }
 }
+
+
